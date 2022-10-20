@@ -21,6 +21,8 @@ demo! >> https://simple-wyy-production.up.railway.app
 
 可以直接`fork`此仓库,更改细节后在`railway`中免费部署.
 
+> 细节可以是`cookies(如果你是vip的话就能有vip啦!)`,`api(nodejs版本的api!)`
+
 已经写好了`Dockerfile`,无需自己啊巴啊巴.
 
 ### 本地

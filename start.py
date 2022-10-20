@@ -3,7 +3,13 @@ import requests
 import json
 
 app = Flask(__name__,template_folder='./static/templates')
-api='https://wyyapi-wzk0.vercel.app'
+api='https://wyyapi-wzk0.vercel.app' ##网易云api地址
+cookies={
+'MUSIC_U':'',
+'NMTID':'',
+'__csrf':'',
+'__remember_me': 'true'
+} ##cookies
 
 def analyze(dic):
     ls=[]
@@ -30,7 +36,8 @@ def hello():
 def hot():
     global api
     hot='/search/hot/detail'
-    r=requests.get(api+hot).text
+    global cookies
+    r=requests.get(api+hot,cookies=cookies).text
     ls=json.loads(r)['data']
     ll=[]
     for l in ls:
@@ -45,13 +52,15 @@ def ss():
         year=request.form.get('year')
         ss='/cloudsearch'
         params={'keywords':title,'limit':year}
-        r=requests.get(api+ss,params=params)
+        global cookies
+        r=requests.get(api+ss,params=params,cookies=cookies)
         return redirect(url_for('res',movies=r.url))
     return render_template('search.html')
 
 @app.route('/result/<path:movies>')
 def res(movies):
-    r=requests.get(movies)
+    global cookies
+    r=requests.get(movies,cookies=cookies)
     movies=analyze(json.loads(r.text))
     return render_template('result.html',movies=movies)
 
@@ -66,11 +75,12 @@ def download():
 @app.route('/dl/<int:uid>')
 def dl(uid):
     global api
+    global cookies
     dl='/song/url/v1'
     params={'id':uid,'level':'higher'}
-    url=json.loads(requests.get(api+dl,params=params).text)['data'][0]['url']
-    lrc=beautjson(json.loads(requests.get(api+'/lyric?id='+str(uid)).text))
-    movies=json.loads(requests.get(api+'/song/detail?ids='+str(uid)).text)
+    url=json.loads(requests.get(api+dl,params=params,cookies=cookies).text)['data'][0]['url']
+    lrc=beautjson(json.loads(requests.get(api+'/lyric?id='+str(uid),cookies=cookies).text))
+    movies=json.loads(requests.get(api+'/song/detail?ids='+str(uid),cookies=cookies).text)
     name=movies['songs'][0]['name']
     ar=[]
     for a in movies['songs'][0]['ar']:
