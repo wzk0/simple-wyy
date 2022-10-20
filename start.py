@@ -76,5 +76,5 @@ def dl(uid):
 def pnf(e):
     return render_template('404.html'),404
 
-if __name__ == "__main__":
+if __name__ == "__start__":
     app.run(host='0.0.0.0',port=80)
