@@ -3,4 +3,4 @@ RUN apt update -y && apt upgrade -y && apt install python3 -y
 RUN apt install python3-pip -y
 COPY * .
 RUN pip install -r requirements.txt
-CMD export FLASK_APP=start && flask run --host=0.0.0.0 --port=1234
+CMD export FLASK_APP=start && flask run --host=0.0.0.0 --port=$PORT
