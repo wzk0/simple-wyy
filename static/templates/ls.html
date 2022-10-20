@@ -1077,6 +1077,8 @@ body .markdown-body
 <script>
 const ap = new APlayer({
     container: document.getElementById('player'),
+    listFolded: false,
+    listMaxHeight: 9999,
     {% autoescape false %}
     audio: {{ ls }}
     {% endautoescape %}

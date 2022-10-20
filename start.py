@@ -25,7 +25,7 @@ def analyze(dic):
         ar=[]
         for ll in l['ar']:
             ar.append(ll['name'])
-        d={'title':l['name']+' - '+','.join(ar),'year':str(l['id'])}
+        d={'title':l['name']+' - '+','.join(ar),'year':str(l['id']),'link':'/dl%s'%str(l['id']),'word':'跳转至单曲页面⚡️'}
         ls.append(d)
     return ls
 
@@ -37,7 +37,6 @@ def analyze_ls(ipt):
         ls='/playlist/track/all'
         params={'id':i,'limit':10}
         data=json.loads(requests.get(api+ls,params=params,cookies=cookies).text)['songs']
-        print(data)
         uid=[]
         for d in data:
             uid.append(str(d['id']))
@@ -83,6 +82,7 @@ def hot():
         return render_template('404.html'),404
     return render_template('hot.html',name='Thdbd',movies=ll)
 
+##搜索的静态页面
 @app.route('/search',methods=['GET','POST'])
 def ss():
     try:
@@ -93,18 +93,49 @@ def ss():
                 year=request.form.get('year')
             except:
                 year='50'
-            r=api+'/cloudsearch?keywords='+title+'&limit='+year
+            typ=request.form.get('typ')
+            if typ=='':
+                r=api+'/cloudsearch?'+'keywords='+title+'&limit='+year
+            else:
+                r=api+'/cloudsearch?'+'keywords='+title+'&limit='+year+'&type='+typ
             return redirect(url_for('res',movies=r))
     except:
         return render_template('404.html'),404
     return render_template('search.html')
+
+def analyze_10(data):
+    ar=[]
+    for a in data['result']['albums']:
+        ar.append({'title':a['name']+' - '+get_ar(a['artists']),'year':a['idStr'],'link':a['picUrl'],'word':'跳转至专辑封面⚡️'})
+    return ar
+
+def analyze_100(data):
+    ar=[]
+    for a in data['result']['artists']:
+        ar.append({'title':a['name'],'year':a['id'],'link':a['picUrl'],'word':'跳转至歌手头像⚡️'})
+    return ar
+
+def analyze_1000(data):
+    ar=[]
+    for a in data['result']['playlists']:
+        ar.append({'title':a['name']+' - 🎉来自用户: %s创建 - '%a['creator']['nickname']+'播放次数: %s'%str(a['playCount']),'year':str(a['id']),'link':'/ls/a%s'%str(a['id']),'word':'跳转至歌单播放界面⚡️'})
+    return ar
 
 @app.route('/result/<path:movies>')
 def res(movies):
     try:
         global cookies
         r=requests.get(movies,cookies=cookies)
-        movies=analyze(json.loads(r.text))
+        if '&type=1000' in str(r.url):
+            movies=analyze_1000(json.loads(r.text))
+        else:
+            if '&type=100' in str(r.url):
+                movies=analyze_100(json.loads(r.text))
+            else:
+                if '&type=10' in str(r.url):
+                    movies=analyze_10(json.loads(r.text))
+                else:
+                    movies=analyze(json.loads(r.text))
     except:
         return render_template('404.html'),404
     return render_template('result.html',movies=movies)

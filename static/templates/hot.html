@@ -1074,10 +1074,10 @@ body .markdown-body
 <br><br>
 <ul>
     {% for movie in movies %}
-    <li>🌈关键词: {{ movie.title }}</li>
+    <li>🌈关键词</li><br>
 </ul>
-    <blockquote>
-    <p>热度: {{ movie.year }}🔥</p>
+    <blockquote>{{ movie.title }}
+    <p><br>热度: {{ movie.year }}🔥</p>
     </blockquote>
     <hr><br><br>
 {% endfor %}

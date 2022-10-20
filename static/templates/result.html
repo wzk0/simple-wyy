@@ -1073,10 +1073,10 @@ body .markdown-body
 <br>
 <ul>
     {% for movie in movies %}
-    <li>名称: {{ movie.title }}✨</li>
+    <li>名称: {{ movie.title }}✨</li><br>
 </ul>
     <blockquote>
-    <p>🦄ID: {{ movie.year }} - <a href="/dl/{{ movie.year }}">跳转至单曲页面⚡️</a></p>
+    <p>🦄ID: {{ movie.year }}<br><br><a href="{{ movie.link }}">{{ movie.word }}</a></p>
     </blockquote>
     <hr><br><br>
 {% endfor %}
