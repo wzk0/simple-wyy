@@ -25,7 +25,7 @@ def analyze(dic):
         ar=[]
         for ll in l['ar']:
             ar.append(ll['name'])
-        d={'title':l['name']+' - '+','.join(ar),'year':str(l['id']),'link':'/dl%s'%str(l['id']),'word':'跳转至单曲页面⚡️'}
+        d={'title':l['name']+' - '+','.join(ar),'year':str(l['id']),'link':'/dl/%s'%str(l['id']),'word':'跳转至单曲页面⚡️'}
         ls.append(d)
     return ls
 
@@ -58,12 +58,37 @@ def beautjson(d):
         llrc.append(lr.split(']')[-1])
     return llrc
 
+def analyze_10(data):
+    ar=[]
+    for a in data['result']['albums']:
+        ar.append({'title':a['name']+' - '+get_ar(a['artists']),'year':a['idStr'],'link':a['picUrl'],'word':'跳转至专辑封面⚡️'})
+    return ar
+
+def analyze_100(data):
+    ar=[]
+    for a in data['result']['artists']:
+        ar.append({'title':a['name'],'year':a['id'],'link':a['picUrl'],'word':'跳转至歌手头像⚡️'})
+    return ar
+
+def analyze_1000(data):
+    ar=[]
+    for a in data['result']['playlists']:
+        ar.append({'title':a['name']+' - 🎉来自用户: %s创建 - '%a['creator']['nickname']+'播放次数: %s'%str(a['playCount']),'year':str(a['id']),'link':'/ls/a%s'%str(a['id']),'word':'跳转至歌单播放界面⚡️'})
+    return ar
+
 ##以下是视图函数
 
 @app.route('/')
 def hello():
     try:
         return render_template('index.html',name='Thdbd')
+    except:
+        return render_template('404.html'),404
+
+@app.route('/about')
+def abt():
+    try:
+        return render_template('about.html')
     except:
         return render_template('404.html'),404
 
@@ -102,24 +127,6 @@ def ss():
     except:
         return render_template('404.html'),404
     return render_template('search.html')
-
-def analyze_10(data):
-    ar=[]
-    for a in data['result']['albums']:
-        ar.append({'title':a['name']+' - '+get_ar(a['artists']),'year':a['idStr'],'link':a['picUrl'],'word':'跳转至专辑封面⚡️'})
-    return ar
-
-def analyze_100(data):
-    ar=[]
-    for a in data['result']['artists']:
-        ar.append({'title':a['name'],'year':a['id'],'link':a['picUrl'],'word':'跳转至歌手头像⚡️'})
-    return ar
-
-def analyze_1000(data):
-    ar=[]
-    for a in data['result']['playlists']:
-        ar.append({'title':a['name']+' - 🎉来自用户: %s创建 - '%a['creator']['nickname']+'播放次数: %s'%str(a['playCount']),'year':str(a['id']),'link':'/ls/a%s'%str(a['id']),'word':'跳转至歌单播放界面⚡️'})
-    return ar
 
 @app.route('/result/<path:movies>')
 def res(movies):
