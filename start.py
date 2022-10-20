@@ -89,7 +89,10 @@ def ss():
         global api
         if request.method == 'POST':
             title=request.form.get('title')
-            year=request.form.get('year')
+            try:
+                year=request.form.get('year')
+            except:
+                year='50'
             r=api+'/cloudsearch?keywords='+title+'&limit='+year
             return redirect(url_for('res',movies=r))
     except:
