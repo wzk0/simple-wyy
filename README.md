@@ -3,6 +3,8 @@
 
 ## 效果
 
+demo! >> https://simple-wyy-production.up.railway.app
+
 ![首页](https://ghproxy.com/https://raw.githubusercontent.com/wzk0/photo/main/202210192122486.png)
 
 ![搜索](https://ghproxy.com/https://raw.githubusercontent.com/wzk0/photo/main/202210192122895.png)
@@ -11,15 +13,15 @@
 
 ![热搜](https://ghproxy.com/https://raw.githubusercontent.com/wzk0/photo/main/202210192123841.png)
 
-![单页](https://ghproxy.com/https://raw.githubusercontent.com/wzk0/photo/main/202210192129789.png)
-
-> 单页的歌词有点丑了...
+![单页](https://ghproxy.com/https://raw.githubusercontent.com/wzk0/photo/main/202210200952765.png)
 
 ## 部署
 
 ### 服务器端
 
-正在研究中...
+可以直接`fork`此仓库,更改细节后在`railway`中免费部署.
+
+已经写好了`Dockerfile`,无需自己啊巴啊巴.
 
 ### 本地
 
