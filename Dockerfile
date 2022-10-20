@@ -4,5 +4,5 @@ RUN apt install python3-pip -y
 COPY * .
 RUN pip install -r requirements.txt
 RUN ls
-RUN export FLASK_APP=start
+CMD export FLASK_APP=start
 CMD flask run
