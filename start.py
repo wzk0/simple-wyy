@@ -15,6 +15,13 @@ def analyze(dic):
         ls.append(d)
     return ls
 
+def beautjson(d):
+    lrc=d['lrc']['lyric']
+    llrc=[]
+    for lr in lrc.split('\n'):
+        llrc.append(lr.split(']')[-1])
+    return llrc
+
 @app.route('/')
 def hello():
     return render_template('index.html',name='Thdbd')
@@ -62,7 +69,7 @@ def dl(uid):
     dl='/song/url/v1'
     params={'id':uid,'level':'higher'}
     url=json.loads(requests.get(api+dl,params=params).text)['data'][0]['url']
-    lrc=json.loads(requests.get(api+'/lyric?id='+str(uid)).text)['lrc']['lyric']
+    lrc=beautjson(json.loads(requests.get(api+'/lyric?id='+str(uid)).text))
     movies=json.loads(requests.get(api+'/song/detail?ids='+str(uid)).text)
     name=movies['songs'][0]['name']
     ar=[]
