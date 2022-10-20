@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- saved from url=(0019)file:///tmp/17.html -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>body {
   max-width: 980px;
   outline: 1300px solid #fff;
@@ -1067,52 +1068,35 @@ body .markdown-body
 .highlight .vi{color:teal}
 .highlight .il{color:#009999}
 .highlight .gc{color:#999;background-color:#EAF2F5}
-</style><title>🍱下载</title></head><body><article class="markdown-body"><h2 id="thdbd">🍱便当的简陋网易云!<a class="headerlink" href="file:///tmp/102.html#thdbd" title="Permanent link"></a></h2>
-  <br>
-<h3 id="_1">✨请输入歌曲ID<a class="headerlink" href="file:///tmp/102.html#_1" title="Permanent link"></a></h3>
+</style><title>🍱歌单</title></head><body><article class="markdown-body"><h2 id="_1">🍱便当的简陋网易云!<a class="headerlink" href="file:///tmp/17.html#_1" title="Permanent link"></a></h2><br>
+<h3 id="_2">✨在线播放歌单<a class="headerlink" href="file:///tmp/17.html#_2" title="Permanent link"></a></h3><br>
+
+<link href="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.js"></script>
+<div id="player"></div>
+<script>
+const ap = new APlayer({
+    container: document.getElementById('player'),
+    {% autoescape false %}
+    audio: {{ ls }}
+    {% endautoescape %}
+});
+
+</script>
 <br>
-<style> 
-input[type=text] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  box-sizing: border-box;
-  border: 1px solid #555;
-  outline: none;
-}
-
-input[type=text]:focus {
-  background-color: lightblue;
-}
-.button {
-    background-color: write; /* Green */
-    border: none;
-    color: black;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    -webkit-transition-duration: 0.4s; /* Safari */
-    transition-duration: 0.4s;
-}
-.button1 {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-}
-</style>
-
-<form method="post">
-    <input text="" class="glass" type="text" name="title" required="">
-    <br><br><br><br>
-    <center><input class="button button1" type="submit" name="submit" value="⚡️Get!⚡️"></center>
-</form>
-<br><br><br><br><footer><center><a href="/">🚀回到主页.</a></center></footer></article><script async=""></article><script async="">
+<hr>
+<br>
+<h3 id="_2">🎉或点击以下同名链接下载<a class="headerlink" href="file:///tmp/17.html#_2" title="Permanent link"></a></h3><br>
+{% for l in ls %}
+<center><a href="{{ l['url'] }}">{{ l['name'] }} - {{ l['artist'] }}</a><br><br></center>
+{% endfor %}
+<br><br><br><br>
+<footer><center><a href="/">🚀回到主页.</a></center></footer>
+</article><script async="">
 document.write(
   '<script src="http://' +
   (location.host || 'localhost').split(':')[0] +
   ':35729/livereload.js?snipver=1" async></' +
   'script>')
-</script><script src="./js/livereload.js" async=""></script>
+</script><script src="./ls_files/livereload.js" async=""></script>
 </body></html>
