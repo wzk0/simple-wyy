@@ -174,6 +174,10 @@ def dl(uid):
         dl='/song/url/v1'
         params={'id':uid,'level':'exhigh'}
         url=json.loads(requests.get(api+dl,params=params,cookies=cookies).text)['data'][0]['url']
+        if url==None:
+            url='https://ghproxy.com/https://github.com/wzk0/photo/blob/0158be3de27768ae455066eaa21c8b10540ce79e/Never%20Gonna%20Give%20You%20Up%20-%20Rick%20Astley.mp3?raw=true'
+        else:
+            url=url
         lrc=beautjson(json.loads(requests.get(api+'/lyric?id='+str(uid),cookies=cookies).text))
         movies=json.loads(requests.get(api+'/song/detail?ids='+str(uid),cookies=cookies).text)
         name=movies['songs'][0]['name']
