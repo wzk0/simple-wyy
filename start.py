@@ -35,7 +35,7 @@ def analyze_ls(ipt):
     if 'a' in ipt:
         i=ipt.replace('a','')
         ls='/playlist/track/all'
-        params={'id':i,'limit':10}
+        params={'id':i,'limit':20}
         data=json.loads(requests.get(api+ls,params=params,cookies=cookies).text)['songs']
         uid=[]
         for d in data:
@@ -122,10 +122,11 @@ def ss():
         global api
         if request.method == 'POST':
             title=request.form.get('title')
-            try:
-                year=request.form.get('year')
-            except:
+            year=request.form.get('year')
+            if year=='':
                 year='50'
+            else:
+                year=year
             typ=request.form.get('typ')
             if typ=='':
                 r=api+'/cloudsearch?'+'keywords='+title+'&limit='+year
