@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0019)file:///tmp/24.html -->
+<!-- saved from url=(0019)file:///tmp/13.html -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>body {
   max-width: 980px;
   outline: 1300px solid #fff;
@@ -1068,55 +1068,70 @@ body .markdown-body
 .highlight .vi{color:teal}
 .highlight .il{color:#009999}
 .highlight .gc{color:#999;background-color:#EAF2F5}
-</style><title>🍱关于</title></head><body><article class="markdown-body"><h2 id="_1">🍱便当的简陋网易云!<a class="headerlink" href="file:///tmp/24.html#_1" title="Permanent link"></a></h2>
-<br><h3 id="_2">首先,感谢使用🥳🎉<a class="headerlink" href="file:///tmp/24.html#_2" title="Permanent link"></a></h3><br>
-<p>这是一个使用<code>Flask框架</code>运行的网站,旨在<code>让我自己学习Flask的相关知识</code>,以及<code>更方便简洁地从网易云获取信息</code>!</p>
-<br><p>此页面是一些<strong>F&amp;Q</strong>.</p>
+</style><title>🍱关于</title></head><body><article class="markdown-body"><h2 id="_1">🍱便当的简陋网易云!<a class="headerlink" href="file:///tmp/13.html#_1" title="Permanent link"></a></h2>
+<h3 id="_2"><br>首先,感谢使用🥳🎉<a class="headerlink" href="file:///tmp/13.html#_2" title="Permanent link"></a></h3>
+<p><br>这是一个使用<code>Flask框架</code>运行的网站,旨在<code>让我自己学习Flask的相关知识</code>,以及<code>更方便简洁地从网易云获取信息</code>!</p>
+<p><br>那么这里需要说明一些<strong>FAQ</strong>.</p>
 <br><hr><br>
-<p><strong><em>F1:</em></strong></p>
+<p><strong><em>Q1:</em></strong></p>
 <blockquote>
 <p>搜索功能怎么这么多框?</p>
 </blockquote>
-<p><strong><em>Q1:</em></strong></p>
+<p><strong><em>A1:</em></strong></p>
 <ul>
 <li>
 <p>✨使用<strong>搜索功能</strong>时,</p>
 <p><code>第一个框</code>为<strong>必选</strong>框(关键词),后面的为<strong>自选</strong>框;</p>
-<p>自选框请填写<strong>数字</strong>,不然<code>出错后</code>会将你重定向到<code>鸟不拉屎的地方</code>🐦</p>
+<p>自选框请填写<strong>数字</strong>或<strong>不填</strong>,不然<code>出错后</code>会将你重定向到<code>鸟不拉屎的地方</code>🐦</p>
 </li>
 </ul>
 <br><hr><br>
-<p><strong><em>F2:</em></strong></p>
+<p><strong><em>Q2:</em></strong></p>
 <blockquote>
 <p>歌单怎么就这么点歌?</p>
 </blockquote>
-<p><strong><em>Q2:</em></strong></p>
+<p><strong><em>A2:</em></strong></p>
 <ul>
 <li>
 <p>🌈使用<strong>歌单功能</strong>时,</p>
 <p>由于是<strong>预先</strong>从API服务器获取音频链接,</p>
 <p>因此,为了避免音频<strong>可能失效</strong>导致<code>无法播放</code>的情况发生,只加载<strong>十首</strong>.</p>
-<p>(实际上十首的时候,也可能会出现<code>失效情况</code>,此时<strong>刷新网页</strong>即可)👍</p>
+<p>(实际上十首的时候,也可能会出现<code>失效情况</code>,此时<strong>刷新网页</strong>即可重新解析)👍</p>
 </li>
 </ul>
 <br><hr><br>
-<p><strong><em>F3:</em></strong></p>
-<blockquote>
-<p>网页有时候加载不出来?</p>
-</blockquote>
 <p><strong><em>Q3:</em></strong></p>
+<blockquote>
+<p>网页有时候加载加载失败,把我送到鸟不拉屎的地方?</p>
+</blockquote>
+<p><strong><em>A3:</em></strong></p>
 <ul>
 <li>
 <p>🔥关于<strong>网站的服务器</strong>,</p>
-<p>由于<strong>我没钱</strong>,只能用免费的<code>Railway</code>部署,用户多起来的时候<strong>难免卡顿</strong>😭</p>
+<p>由于<strong>我没钱</strong>,只能用免费的<code>Railway</code>部署,用户多起来的时候<strong>可能出错</strong>.</p>
+<p>同时,后端使用的API服务器是用的免费的<code>Vercel</code>,请求速度也没有那么快.</p>
+<p>当然,<strong>更可能的情况</strong>是你的参数输入得<strong>有问题</strong>🤔</p>
 </li>
 </ul>
 <br><hr><br>
-<p><strong><em>F4:</em></strong></p>
+<p><strong><em>Q4:</em></strong></p>
+<blockquote>
+<p>歌单页面加载速度慢?</p>
+</blockquote>
+<p><strong><em>A4:</em></strong></p>
+<ul>
+<li>
+<p>😘关于<strong>歌单功能</strong>,</p>
+<p>理由同<strong>Q2</strong>,由于歌单页面请求大量API(大约20个),再加上<strong>Q3</strong>的因素</p>
+<p>因此<code>加载速度</code>可能会<strong>比较慢</strong>😭</p>
+</li>
+</ul>
+<br><hr><br>
+<p><strong><em>Q5:</em></strong></p>
 <blockquote>
 <p>前端怎么这么烂?</p>
 </blockquote>
-<p><strong><em>Q4:</em></strong></p>
+<p><strong><em>A5:</em></strong></p>
 <ul>
 <li>
 <p>😜关于<strong>网站的前端</strong>,</p>
@@ -1124,9 +1139,9 @@ body .markdown-body
 <p>(因为我是通过<strong>markdown</strong>转化的)🌚</p>
 </li>
 </ul>
-<br><hr><br>
-<p><center><strong>更多问题</strong>可以在<a href="https://github.com/wzk0/simple-wyy/issues">此网站源代码GitHub仓库的issues</a>上提出,欢迎各位提出<strong>建议</strong>和<strong>更好玩的想法</strong>🥰</p></center><br><br><br><br>
-<footer><center><a href="/">🚀回到主页.</a></center></footer></article><script async="">
+<br><br><hr><br><br>
+<p><center><strong>更多问题</strong>可以在<a href="https://github.com/wzk0/simple-wyy/issues">此网站源代码GitHub仓库的issues</a>上提出,欢迎各位提出<strong>建议</strong>和<strong>更好玩的想法</strong>🥰</p></center><br><b><center><i>Design Style</i>: Modern Minimalist<small> (装起来了🌚🌚)</small><br><br><i>Made by</i><a href="https://wzk0.github.io">: 听话的便当🍱</a></center></b><br><br>
+<footer><center><br><a href="/">🚀回到主页.</a></center></footer></article><script async="">
 document.write(
   '<script src="http://' +
   (location.host || 'localhost').split(':')[0] +
