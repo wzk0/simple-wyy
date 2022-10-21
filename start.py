@@ -46,8 +46,11 @@ def analyze_ls(ipt):
     params={'id':uid,'level':'exhigh'}
     params1={'ids':uid}
     namels=[]
-    for s,u in zip(json.loads(requests.get(api+'/song/detail',params=params1,cookies=cookies).text)['songs'],json.loads(requests.get(api+'/song/url/v1',params=params,cookies=cookies).text)['data']):
-        namels.append({'name':s['name'],'url':u['url'],'artist':get_ar(s['ar']),'cover':s['al']['picUrl']})
+    ss=json.loads(requests.get(api+'/song/detail',params=params1,cookies=cookies).text)['songs']
+    ##uu=
+    for s,u in zip(ss,uid.split(',')):
+        params={'id':u,'level':'exhigh'}
+        namels.append({'name':s['name'],'url':json.loads(requests.get(api+'/song/url/v1',params=params,cookies=cookies).text)['data'][0]['url'],'artist':get_ar(s['ar']),'cover':s['al']['picUrl']})
     return namels
 
 ##歌词美化

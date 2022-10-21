@@ -1079,8 +1079,9 @@ const ap = new APlayer({
     container: document.getElementById('player'),
     listFolded: false,
     listMaxHeight: 9999,
+    audio: 
     {% autoescape false %}
-    audio: {{ ls }}
+    {{ ls }}
     {% endautoescape %}
 });
 
