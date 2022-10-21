@@ -41,13 +41,20 @@ def analyze_ls(ipt):
         for d in data:
             uid.append(str(d['id']))
         uid=','.join(uid)
+    if 'b' in ipt:
+        i=ipt.replace('b','')
+        ls='/album?id=%s'%i
+        data=json.loads(requests.get(api+ls,cookies=cookies).text)['songs']
+        uid=[]
+        for i in data:
+            uid.append(str(i['id']))
+        uid=','.join(uid)
     if ',' in ipt:
         uid=ipt
     params={'id':uid,'level':'exhigh'}
     params1={'ids':uid}
     namels=[]
     ss=json.loads(requests.get(api+'/song/detail',params=params1,cookies=cookies).text)['songs']
-    ##uu=
     for s,u in zip(ss,uid.split(',')):
         params={'id':u,'level':'exhigh'}
         url=json.loads(requests.get(api+'/song/url/v1',params=params,cookies=cookies).text)['data'][0]['url']
@@ -69,7 +76,7 @@ def beautjson(d):
 def analyze_10(data):
     ar=[]
     for a in data['result']['albums']:
-        ar.append({'title':a['name']+' - '+get_ar(a['artists']),'year':a['idStr'],'link':a['picUrl'],'word':'跳转至专辑封面⚡️'})
+        ar.append({'title':a['name']+' - '+get_ar(a['artists']),'year':str(a['id']),'link':'/ls/b%s'%str(a['id']),'word':'跳转至专辑播放界面⚡️'})
     return ar
 
 def analyze_100(data):
