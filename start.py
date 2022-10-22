@@ -82,7 +82,7 @@ def analyze_10(data):
 def analyze_100(data):
     ar=[]
     for a in data['result']['artists']:
-        ar.append({'title':a['name'],'year':a['id'],'link':a['picUrl'],'word':'跳转至歌手头像⚡️'})
+        ar.append({'title':a['name'],'year':str(a['id']),'link':'/singer/%s'%str(a['id']),'word':'跳转至歌手页面⚡️'})
     return ar
 
 def analyze_1000(data):
@@ -148,7 +148,10 @@ def ss():
 def res(movies):
     try:
         global cookies
-        r=requests.get(movies,cookies=cookies)
+        if 'cloudsearch?keywords=' not in movies:
+            return render_template('404.html'),404
+        else:
+            r=requests.get(movies,cookies=cookies)
         if '&type=1000' in str(r.url):
             movies=analyze_1000(json.loads(r.text))
         else:
@@ -208,6 +211,19 @@ def list():
     except:
         return render_template('404.html'),404
     return render_template('list.html')
+
+@app.route('/singer/<string:uid>')
+def singer(uid):
+    try:
+        global api
+        r=json.loads(requests.get(api+'/artists?id='+uid).text)
+        hotsongs=[]
+        for h in r['hotSongs']:
+            hotsongs.append({'name':h['name']+' - '+get_ar(h['ar']),'uid':str(h['id'])})
+        ls={'name':r['artist']['name'],'alias':','.join(r['artist']['alias']),'bio':r['artist']['briefDesc'],'picUrl':r['artist']['picUrl'],'musicsize':str(r['artist']['musicSize']),'songs':hotsongs}
+        return render_template('singer.html',res=ls)
+    except:
+        return render_template('404.html'),404
 
 @app.route('/ls/<string:uid>')
 def ls(uid):
