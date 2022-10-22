@@ -3,7 +3,7 @@ import requests
 import json
 import random
 
-requests=requests.Session()
+session=requests.Session()
 
 app = Flask(__name__,template_folder='./static/templates')
 api='https://wyyapi-wzk0.vercel.app' ##网易云api地址
@@ -16,9 +16,6 @@ cookies={
 
 ##解析列表得到歌手
 def get_ar(ls):
-    global requests
-    global api
-    global cookies  
     ar=[]
     for a in ls:
         ar.append(a['name'])
@@ -26,9 +23,6 @@ def get_ar(ls):
 
 ##解析得到歌曲信息
 def analyze(dic):
-    global requests
-    global api
-    global cookies  
     ls=[]
     for l in dic['result']['songs']:
         ar=[]
@@ -40,13 +34,13 @@ def analyze(dic):
 
 ##解析得到链接和歌曲信息
 def analyze_ls(ipt):
-    global requests
+    global session
     global api
     global cookies  
     ipt=str(ipt)
     if 'a' in ipt:
         i=ipt.replace('a','')
-        pls=json.loads(requests.get(api+'/playlist/detail?id='+i).text)['playlist']
+        pls=json.loads(session.get(api+'/playlist/detail?id='+i).text)['playlist']
         if pls['description']==None:
             description=str(i)+' - 😶‍🌫️这张歌单没有描述...'
         else:
@@ -54,7 +48,7 @@ def analyze_ls(ipt):
         word=description
         ls='/playlist/track/all'
         params={'id':i,'limit':20}
-        data=json.loads(requests.get(api+ls,params=params,cookies=cookies).text)['songs']
+        data=json.loads(session.get(api+ls,params=params,cookies=cookies).text)['songs']
         uid=[]
         for d in data:
             uid.append(str(d['id']))
@@ -62,7 +56,7 @@ def analyze_ls(ipt):
     if 'b' in ipt:
         i=ipt.replace('b','')
         ls='/album?id=%s'%i
-        data=json.loads(requests.get(api+ls,cookies=cookies).text)['songs']
+        data=json.loads(session.get(api+ls,cookies=cookies).text)['songs']
         word=data[0]['al']['name']
         uid=[]
         for i in data:
@@ -74,10 +68,10 @@ def analyze_ls(ipt):
     params={'id':uid,'level':'exhigh'}
     params1={'ids':uid}
     namels=[]
-    ss=json.loads(requests.get(api+'/song/detail',params=params1,cookies=cookies).text)['songs']
+    ss=json.loads(session.get(api+'/song/detail',params=params1,cookies=cookies).text)['songs']
     for s,u in zip(ss,uid.split(',')):
         params={'id':u,'level':'exhigh'}
-        url=json.loads(requests.get(api+'/song/url/v1',params=params,cookies=cookies).text)['data'][0]['url']
+        url=json.loads(session.get(api+'/song/url/v1',params=params,cookies=cookies).text)['data'][0]['url']
         if url==None:
             url='https://ghproxy.com/https://github.com/wzk0/photo/blob/0158be3de27768ae455066eaa21c8b10540ce79e/Never%20Gonna%20Give%20You%20Up%20-%20Rick%20Astley.mp3?raw=true'
         else:
@@ -87,9 +81,6 @@ def analyze_ls(ipt):
 
 ##歌词美化
 def beautjson(d):
-    global requests
-    global api
-    global cookies  
     lrc=d['lrc']['lyric']
     llrc=[]
     for lr in lrc.split('\n'):
@@ -97,27 +88,18 @@ def beautjson(d):
     return llrc
 
 def analyze_10(data):
-    global requests
-    global api
-    global cookies  
     ar=[]
     for a in data['result']['albums']:
         ar.append({'title':a['name']+' - '+get_ar(a['artists']),'year':str(a['id']),'link':'/ls/b%s'%str(a['id']),'word':'跳转至专辑播放界面⚡️'})
     return ar
 
 def analyze_100(data):
-    global requests
-    global api
-    global cookies  
     ar=[]
     for a in data['result']['artists']:
         ar.append({'title':a['name'],'year':str(a['id']),'link':'/singer/%s'%str(a['id']),'word':'跳转至歌手页面⚡️'})
     return ar
 
 def analyze_1000(data):
-    global requests
-    global api
-    global cookies  
     ar=[]
     for a in data['result']['playlists']:
         ar.append({'title':a['name']+' - 🎉来自用户: %s创建 - '%a['creator']['nickname']+'播放次数: %s'%str(a['playCount']),'year':str(a['id']),'link':'/ls/a%s'%str(a['id']),'word':'跳转至歌单播放界面⚡️'})
@@ -127,9 +109,6 @@ def analyze_1000(data):
 
 @app.route('/')
 def hello():
-    global requests
-    global api
-    global cookies  
     try:
         return render_template('index.html',name='Thdbd')
     except:
@@ -137,9 +116,6 @@ def hello():
 
 @app.route('/about')
 def abt():
-    global requests
-    global api
-    global cookies  
     try:
         return render_template('about.html')
     except:
@@ -147,12 +123,12 @@ def abt():
 
 @app.route('/hot')
 def hot():
-    global requests
+    global session
     global api
     global cookies  
     try:        
         hot='/search/hot/detail'        
-        r=requests.get(api+hot,cookies=cookies).text
+        r=session.get(api+hot,cookies=cookies).text
         ls=json.loads(r)['data']
         ll=[]
         for l in ls:
@@ -164,9 +140,6 @@ def hot():
 ##搜索的静态页面
 @app.route('/search',methods=['GET','POST'])
 def ss():
-    global requests
-    global api
-    global cookies  
     try:        
         if request.method == 'POST':
             title=request.form.get('title')
@@ -187,14 +160,14 @@ def ss():
 
 @app.route('/result/<path:movies>')
 def res(movies):
-    global requests
+    global session
     global api
     global cookies  
     try:        
         if 'cloudsearch?keywords=' not in movies:
             return render_template('404.html'),404
         else:
-            r=requests.get(movies,cookies=cookies)
+            r=session.get(movies,cookies=cookies)
         if '&type=1000' in str(r.url):
             movies=analyze_1000(json.loads(r.text))
         else:
@@ -211,9 +184,6 @@ def res(movies):
 
 @app.route('/download',methods=['GET','POST'])
 def download():
-    global requests
-    global api
-    global cookies  
     try:        
         if request.method == 'POST':
             title=request.form.get('title')
@@ -224,19 +194,19 @@ def download():
 
 @app.route('/dl/<int:uid>')
 def dl(uid):
-    global requests
+    global session
     global api
     global cookies  
     try:                
         dl='/song/url/v1'
         params={'id':uid,'level':'exhigh'}
-        url=json.loads(requests.get(api+dl,params=params,cookies=cookies).text)['data'][0]['url']
+        url=json.loads(session.get(api+dl,params=params,cookies=cookies).text)['data'][0]['url']
         if url==None:
             url='https://ghproxy.com/https://github.com/wzk0/photo/blob/0158be3de27768ae455066eaa21c8b10540ce79e/Never%20Gonna%20Give%20You%20Up%20-%20Rick%20Astley.mp3?raw=true'
         else:
             url=url
-        lrc=beautjson(json.loads(requests.get(api+'/lyric?id='+str(uid),cookies=cookies).text))
-        movies=json.loads(requests.get(api+'/song/detail?ids='+str(uid),cookies=cookies).text)
+        lrc=beautjson(json.loads(session.get(api+'/lyric?id='+str(uid),cookies=cookies).text))
+        movies=json.loads(session.get(api+'/song/detail?ids='+str(uid),cookies=cookies).text)
         al_ls={'id':movies['songs'][0]['al']['id'],'name':movies['songs'][0]['al']['name']}
         name=movies['songs'][0]['name']
         ar=[]
@@ -250,9 +220,6 @@ def dl(uid):
 
 @app.route('/list',methods=['GET','POST'])
 def list():
-    global requests
-    global api
-    global cookies  
     try:        
         if request.method == 'POST':
             title=request.form.get('title')
@@ -263,11 +230,11 @@ def list():
 
 @app.route('/singer/<string:uid>')
 def singer(uid):
-    global requests
+    global session
     global api
     global cookies  
     try:        
-        r=json.loads(requests.get(api+'/artists?id='+uid).text)
+        r=json.loads(session.get(api+'/artists?id='+uid).text)
         hotsongs=[]
         for h in r['hotSongs']:
             hotsongs.append({'name':h['name']+' - '+get_ar(h['ar']),'uid':str(h['id'])})
@@ -278,9 +245,6 @@ def singer(uid):
 
 @app.route('/ls/<string:uid>')
 def ls(uid):
-    global requests
-    global api
-    global cookies  
     try:
         ls,word=analyze_ls(uid)
         return render_template('ls.html',ls=ls,word=word)
@@ -289,16 +253,16 @@ def ls(uid):
 
 @app.route('/star')
 def rand():
-    global requests
+    global session
     global api
     global cookies  
     try:        
         cat_ls=['综艺', '流行', '影视原声', '华语', '清晨', '怀旧', '夜晚', '摇滚', '欧美', '清新', 'ACG', '浪漫', '民谣', '日语', '学习', '儿童', '电子', '韩语', '校园', '工作', '午休', '伤感', '粤语', '游戏', '舞曲', '说唱', '70后', '治愈', '下午茶', '放松', '轻音乐', '80后', '地铁', '90后', '孤独', '驾车', '爵士', '感动', '乡村', '网络歌曲', '运动', '兴奋', 'KTV', 'R&B/Soul', '旅行', '古典', '快乐', '经典', '散步', '民族', '翻唱', '酒吧', '安静', '吉他', '英伦', '思念', '金属', '钢琴', '器乐', '朋克', '蓝调', '榜单', '00后', '雷鬼', '世界音乐', '拉丁', 'New Age', '古风', '后摇', 'Bossa Nova']
         cat=random.choice(cat_ls)
         params={'limit':10,'cat':cat}
-        r=json.loads(requests.get(api+'/top/playlist',params=params).text)['playlists']
+        r=json.loads(session.get(api+'/top/playlist',params=params).text)['playlists']
         try:
-            ti=json.loads(requests.get('http://quan.suning.com/getSysTime.do').text)['sysTime2'].split(' ')[0].split('-')
+            ti=json.loads(session.get('http://quan.suning.com/getSysTime.do').text)['sysTime2'].split(' ')[0].split('-')
             day=ti[0]+'年'+ti[1]+'月'+ti[2]+'日'
         except:
             day='今天'
@@ -311,10 +275,7 @@ def rand():
 
 @app.errorhandler(404)
 def pnf(e):
-    global requests
-    global api
-    global cookies  
     return render_template('404.html'),404
 
 if __name__ == "__start__":
-    app.run(host='0.0.0.0',port=80)
+    app.run(host='0.0.0.0')
