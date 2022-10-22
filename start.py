@@ -1,6 +1,7 @@
 from flask import Flask,render_template,request,redirect,url_for
 import requests
 import json
+import random
 
 app = Flask(__name__,template_folder='./static/templates')
 api='https://wyyapi-wzk0.vercel.app' ##网易云api地址
@@ -229,6 +230,26 @@ def singer(uid):
 def ls(uid):
     try:
         return render_template('ls.html',ls=analyze_ls(uid))
+    except:
+        return render_template('404.html'),404
+
+@app.route('/star')
+def rand():
+    try:
+        global api
+        cat_ls=['综艺', '流行', '影视原声', '华语', '清晨', '怀旧', '夜晚', '摇滚', '欧美', '清新', 'ACG', '浪漫', '民谣', '日语', '学习', '儿童', '电子', '韩语', '校园', '工作', '午休', '伤感', '粤语', '游戏', '舞曲', '说唱', '70后', '治愈', '下午茶', '放松', '轻音乐', '80后', '地铁', '90后', '孤独', '驾车', '爵士', '感动', '乡村', '网络歌曲', '运动', '兴奋', 'KTV', 'R&B/Soul', '旅行', '古典', '快乐', '经典', '散步', '民族', '翻唱', '酒吧', '安静', '吉他', '英伦', '思念', '金属', '钢琴', '器乐', '朋克', '蓝调', '榜单', '00后', '雷鬼', '世界音乐', '拉丁', 'New Age', '古风', '后摇', 'Bossa Nova']
+        cat=random.choice(cat_ls)
+        params={'limit':10,'cat':cat}
+        r=json.loads(requests.get(api+'/top/playlist',params=params).text)['playlists']
+        try:
+            ti=json.loads(requests.get('http://quan.suning.com/getSysTime.do').text)['sysTime2'].split(' ')[0].split('-')
+            day=ti[0]+'年'+ti[1]+'月'+ti[2]+'日'
+        except:
+            day='今天'
+        ls=[]
+        for rr in r:
+            ls.append({'name':rr['name'],'uid':str(rr['id']),'description':rr['description']})
+        return render_template('star.html',cat=cat,res=ls,day=day)
     except:
         return render_template('404.html'),404
 
