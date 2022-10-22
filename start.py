@@ -200,6 +200,7 @@ def dl(uid):
             url=url
         lrc=beautjson(json.loads(requests.get(api+'/lyric?id='+str(uid),cookies=cookies).text))
         movies=json.loads(requests.get(api+'/song/detail?ids='+str(uid),cookies=cookies).text)
+        al_ls={'id':movies['songs'][0]['al']['id'],'name':movies['songs'][0]['al']['name']}
         name=movies['songs'][0]['name']
         ar=[]
         for a in movies['songs'][0]['ar']:
@@ -208,7 +209,7 @@ def dl(uid):
         namels=[name,','.join(ar),pic]
     except:
         return render_template('404.html'),404
-    return render_template('play.html',url=url,lrc=lrc,namels=namels)
+    return render_template('play.html',url=url,lrc=lrc,namels=namels,al_ls=al_ls)
 
 @app.route('/list',methods=['GET','POST'])
 def list():
