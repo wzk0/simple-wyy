@@ -35,6 +35,12 @@ def analyze_ls(ipt):
     ipt=str(ipt)
     if 'a' in ipt:
         i=ipt.replace('a','')
+        pls=json.loads(requests.get(api+'/playlist/detail?id='+i).text)['playlist']
+        if pls['description']==None:
+            description='😶‍🌫️这张歌单没有描述...'
+        else:
+            description=pls['description']
+        word=description
         ls='/playlist/track/all'
         params={'id':i,'limit':20}
         data=json.loads(requests.get(api+ls,params=params,cookies=cookies).text)['songs']
@@ -46,12 +52,14 @@ def analyze_ls(ipt):
         i=ipt.replace('b','')
         ls='/album?id=%s'%i
         data=json.loads(requests.get(api+ls,cookies=cookies).text)['songs']
+        word=data[0]['al']['name']
         uid=[]
         for i in data:
             uid.append(str(i['id']))
         uid=','.join(uid)
     if ',' in ipt:
         uid=ipt
+        word='😘恭喜你发现本站最强大的自定义歌单功能,说明你已经是高手啦!'
     params={'id':uid,'level':'exhigh'}
     params1={'ids':uid}
     namels=[]
@@ -64,7 +72,7 @@ def analyze_ls(ipt):
         else:
             url=url
         namels.append({'name':s['name'],'url':url,'artist':get_ar(s['ar']),'cover':s['al']['picUrl']})
-    return namels
+    return namels,word
 
 ##歌词美化
 def beautjson(d):
@@ -229,7 +237,8 @@ def singer(uid):
 @app.route('/ls/<string:uid>')
 def ls(uid):
     try:
-        return render_template('ls.html',ls=analyze_ls(uid))
+        ls,word=analyze_ls(uid)
+        return render_template('ls.html',ls=ls,word=word)
     except:
         return render_template('404.html'),404
 
