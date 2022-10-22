@@ -1089,10 +1089,14 @@ const ap = new APlayer({
 <br>
 <hr>
 <br>
-<h3 id="_2">🎉或点击以下同名链接下载<a class="headerlink" href="file:///tmp/17.html#_2" title="Permanent link"></a></h3><br>
+<h3 id="_2">🎉或点击以下同名链接下载<a class="headerlink" href="file:///tmp/17.html#_2" title="Permanent link"></a></h3><br><br>
 {% for l in ls %}
 <center><a href="{{ l['url'] }}">{{ l['name'] }} - {{ l['artist'] }}</a><br><br></center>
 {% endfor %}
+<br><br>
+<h3>🌈本页音乐wget指令</h3><br>
+<div class="highlight"><pre>mkdir "{{ word.split(' - ')[0] }}"<br>{% for l in ls %}wget "{{ l['url'] }}" -O "{{ word.split(' - ')[0] }}/{{ l['name'] }} - {{ l['artist'] }}.mp3"<br>{% endfor %}</pre></div>
+
 <br><br><br><br>
 <footer><center><a href="/">🚀回到主页.</a></center></footer>
 </article><script async="">

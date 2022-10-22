@@ -37,9 +37,9 @@ def analyze_ls(ipt):
         i=ipt.replace('a','')
         pls=json.loads(requests.get(api+'/playlist/detail?id='+i).text)['playlist']
         if pls['description']==None:
-            description='😶‍🌫️这张歌单没有描述...'
+            description=str(i)+' - 😶‍🌫️这张歌单没有描述...'
         else:
-            description=pls['description']
+            description=pls['name']+' - '+pls['description']
         word=description
         ls='/playlist/track/all'
         params={'id':i,'limit':20}
