@@ -311,7 +311,12 @@ def mme(uuid):
         global session
         global api
         global cookies 
-        ar,vip,creator,avatar,description=me(json.loads(session.get(api+'/user/playlist?uid='+str(uuid),cookies=cookies).text)['playlist'])
+        res=json.loads(session.get(api+'/user/playlist?uid='+str(uuid),cookies=cookies).text)
+        print(res)
+        if res['more']:
+            ar,vip,creator,avatar,description=me(res['playlist'])
+        else:
+            return render_template('error.html')
         return render_template('me.html',ar=ar,vip=vip,creator=creator,avatar=avatar,description=description)
     except:
         return render_template('404.html'),404
@@ -321,10 +326,14 @@ def mine():
     try:        
         if request.method == 'POST':
             title=request.form.get('title')
-            return redirect(url_for('me',uuid=title))
+            return redirect(url_for('mme',uuid=title))
     except:
         return render_template('404.html'),404
     return render_template('mine.html')
+
+@app.route('/error')
+def ero():
+    return render_template('error.html')
 
 @app.errorhandler(404)
 def pnf(e):
