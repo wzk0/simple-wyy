@@ -312,12 +312,11 @@ def mme(uuid):
         global api
         global cookies 
         res=json.loads(session.get(api+'/user/playlist?uid='+str(uuid),cookies=cookies).text)
-        print(res)
-        if res['more']:
+        try:
             ar,vip,creator,avatar,description=me(res['playlist'])
-        else:
+            return render_template('me.html',ar=ar,vip=vip,creator=creator,avatar=avatar,description=description)
+        except:
             return render_template('error.html')
-        return render_template('me.html',ar=ar,vip=vip,creator=creator,avatar=avatar,description=description)
     except:
         return render_template('404.html'),404
 
