@@ -105,6 +105,28 @@ def analyze_1000(data):
         ar.append({'title':a['name']+' - 🎉来自用户: %s创建 - '%a['creator']['nickname']+'播放次数: %s'%str(a['playCount']),'year':str(a['id']),'link':'/ls/a%s'%str(a['id']),'word':'跳转至歌单播放界面⚡️'})
     return ar
 
+def analyze_1002(data):
+    ar=[]
+    for a in data['result']['userprofiles']:
+        ar.append({'title':a['nickname'],'year':str(a['userId']),'link':'/me/%s'%str(a['userId']),'word':'查看Ta的歌单⚡️'})
+    return ar
+
+def me(data):
+    ar=[]
+    for a in data:
+        if a['description']==None:
+            description='😶‍🌫️这张歌单没有描述...'
+        else:
+            description=a['description']
+        ar.append({'description':description,'listname':a['name'],'musicsize':str(a['trackCount']),'playcount':str(a['playCount']),'listid':str(a['id']),'link':'/ls/a%s'%str(a['id']),'word':'跳转至歌单播放界面⚡️'})
+    vip=str(data[0]['creator']['vipType'])
+    creator=data[0]['creator']['nickname']
+    avatar=data[0]['creator']['avatarUrl']
+    description=data[0]['creator']['description']
+    if description=='':
+        description='😶‍🌫️这位用户没有描述...'
+    return ar,vip,creator,avatar,description
+
 ##以下是视图函数
 
 @app.route('/')
@@ -163,11 +185,13 @@ def res(movies):
     global session
     global api
     global cookies  
-    try:        
-        if 'cloudsearch?keywords=' not in movies:
-            return render_template('404.html'),404
-        else:
-            r=session.get(movies,cookies=cookies)
+    if 'cloudsearch?keywords=' not in movies:
+        return render_template('404.html'),404
+    else:
+        r=session.get(movies,cookies=cookies)
+    if '&type=1002' in str(r.url):
+        movies=analyze_1002(json.loads(r.text))
+    else:
         if '&type=1000' in str(r.url):
             movies=analyze_1000(json.loads(r.text))
         else:
@@ -178,8 +202,6 @@ def res(movies):
                     movies=analyze_10(json.loads(r.text))
                 else:
                     movies=analyze(json.loads(r.text))
-    except:
-        return render_template('404.html'),404
     return render_template('result.html',movies=movies)
 
 @app.route('/download',methods=['GET','POST'])
@@ -279,6 +301,24 @@ def rand():
         return render_template('star.html',cat=cat,res=ls,day=day)
     except:
         return render_template('404.html'),404
+
+@app.route('/me/<string:uuid>')
+def mme(uuid):
+    global session
+    global api
+    global cookies 
+    ar,vip,creator,avatar,description=me(json.loads(session.get(api+'/user/playlist?uid='+str(uuid),cookies=cookies).text)['playlist'])
+    return render_template('me.html',ar=ar,vip=vip,creator=creator,avatar=avatar,description=description)
+
+@app.route('/mine',methods=['GET','POST'])
+def mine():
+    try:        
+        if request.method == 'POST':
+            title=request.form.get('title')
+            return redirect(url_for('me',uuid=title))
+    except:
+        return render_template('404.html'),404
+    return render_template('mine.html')
 
 @app.errorhandler(404)
 def pnf(e):
