@@ -1072,8 +1072,12 @@ body .markdown-body
   <link href="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.css" rel="stylesheet">
 <script src="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.js"></script><br><br>
 <blockquote>
-<strong>{{ namels[0] }}</strong>收录于专辑: <strong>{{ al_ls['name'] }}</strong> - ID: <strong>{{ al_ls['id'] }}</strong> - <a href="/ls/b{{ al_ls['id'] }}">跳转至专辑播放界面⚡️</a><br>
+<strong>{{ namels[0] }}</strong>收录于专辑: <strong>{{ al_ls['name'] }}</strong> - ID: <strong>{{ al_ls['id'] }}</strong> - <a href="/ls/b{{ al_ls['id'] }}">跳转至专辑播放界面⚡️</a>
+  </blockquote><br>{% for ar in arar %}
+<blockquote>
+<strong>{{ namels[0] }}</strong>由歌手: <strong>{{ ar['name'] }}</strong>创作 - ID: <strong>{{ ar['id'] }}</strong> - <a href="/singer/{{ ar['id'] }}">跳转至歌手页面⚡️</a><br>
   </blockquote><br>
+  {% endfor %}
 <h3 id="_1"><a href="{{ url }}">✨点此下载单曲</a><br><br><a class="headerlink" href="file:///tmp/31.html#_1" title="Permanent link"></a></h3>
 <h3 id="_2">🥳或在线播放<a class="headerlink" href="file:///tmp/31.html#_2" title="Permanent link"></a></h3>
 <br>

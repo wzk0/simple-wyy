@@ -212,11 +212,18 @@ def dl(uid):
         ar=[]
         for a in movies['songs'][0]['ar']:
             ar.append(a['name'])
+        ar_id=[]
+        for a in movies['songs'][0]['ar']:
+            ar_id.append(str(a['id']))
+        arar=[]
+        for n,i in zip(ar,ar_id):
+            arar.append({'name':n,'id':i})
         pic=movies['songs'][0]['al']['picUrl']
         namels=[name,','.join(ar),pic]
+        return render_template('play.html',url=url,lrc=lrc,namels=namels,al_ls=al_ls,arar=arar) 
     except:
         return render_template('404.html'),404
-    return render_template('play.html',url=url,lrc=lrc,namels=namels,al_ls=al_ls)
+    return render_template('play.html',url=url,lrc=lrc,namels=namels,al_ls=al_ls,arar=arar) 
 
 @app.route('/list',methods=['GET','POST'])
 def list():
