@@ -185,24 +185,27 @@ def res(movies):
     global session
     global api
     global cookies  
-    if 'cloudsearch?keywords=' not in movies:
-        return render_template('404.html'),404
-    else:
-        r=session.get(movies,cookies=cookies)
-    if '&type=1002' in str(r.url):
-        movies=analyze_1002(json.loads(r.text))
-    else:
-        if '&type=1000' in str(r.url):
-            movies=analyze_1000(json.loads(r.text))
+    try:
+        if 'cloudsearch?keywords=' not in movies:
+            return render_template('404.html'),404
         else:
-            if '&type=100' in str(r.url):
-                movies=analyze_100(json.loads(r.text))
+            r=session.get(movies,cookies=cookies)
+        if '&type=1002' in str(r.url):
+            movies=analyze_1002(json.loads(r.text))
+        else:
+            if '&type=1000' in str(r.url):
+                movies=analyze_1000(json.loads(r.text))
             else:
-                if '&type=10' in str(r.url):
-                    movies=analyze_10(json.loads(r.text))
+                if '&type=100' in str(r.url):
+                    movies=analyze_100(json.loads(r.text))
                 else:
-                    movies=analyze(json.loads(r.text))
-    return render_template('result.html',movies=movies)
+                    if '&type=10' in str(r.url):
+                        movies=analyze_10(json.loads(r.text))
+                    else:
+                        movies=analyze(json.loads(r.text))
+        return render_template('result.html',movies=movies)
+    except:
+        return render_template('404.html'),404
 
 @app.route('/download',methods=['GET','POST'])
 def download():
@@ -304,11 +307,14 @@ def rand():
 
 @app.route('/me/<string:uuid>')
 def mme(uuid):
-    global session
-    global api
-    global cookies 
-    ar,vip,creator,avatar,description=me(json.loads(session.get(api+'/user/playlist?uid='+str(uuid),cookies=cookies).text)['playlist'])
-    return render_template('me.html',ar=ar,vip=vip,creator=creator,avatar=avatar,description=description)
+    try:
+        global session
+        global api
+        global cookies 
+        ar,vip,creator,avatar,description=me(json.loads(session.get(api+'/user/playlist?uid='+str(uuid),cookies=cookies).text)['playlist'])
+        return render_template('me.html',ar=ar,vip=vip,creator=creator,avatar=avatar,description=description)
+    except:
+        return render_template('404.html'),404
 
 @app.route('/mine',methods=['GET','POST'])
 def mine():
