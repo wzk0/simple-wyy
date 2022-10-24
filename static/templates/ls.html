@@ -1091,7 +1091,7 @@ const ap = new APlayer({
 <br>
 <h3 id="_2">🎉或点击以下链接(左部分下载)<a class="headerlink" href="file:///tmp/17.html#_2" title="Permanent link"></a></h3><br><br>
 {% for l in ls %}
-<center><a href="{{ l['url'] }}">{{ l['name'] }} - {{ l['artist'] }}</a><strong> || </strong><a href="/dl/{{ uuid[loop.index0] }}">跳转至单曲页面⚡️</a><br><br></center>
+<center><a href="{{ l['url'] }}">🦄{{ l['name'] }} - {{ l['artist'] }}</a><strong><br><br></strong>ID: <strong>{{ uuid[loop.index0] }}</strong> - <a href="/dl/{{ uuid[loop.index0] }}">跳转至单曲页面⚡️</a><br><br><br></center>
 {% endfor %}
 <br><br>
 <h3>🌈本页音乐wget指令</h3><br><br>
