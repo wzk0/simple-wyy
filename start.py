@@ -77,7 +77,7 @@ def analyze_ls(ipt):
         else:
             url=url
         namels.append({'name':s['name'],'url':url,'artist':get_ar(s['ar']),'cover':s['al']['picUrl']})
-    return namels,word
+    return namels,word,uid.split(',')
 
 ##歌词美化
 def beautjson(d):
@@ -278,8 +278,8 @@ def singer(uid):
 @app.route('/ls/<string:uid>')
 def ls(uid):
     try:
-        ls,word=analyze_ls(uid)
-        return render_template('ls.html',ls=ls,word=word)
+        ls,word,uuid=analyze_ls(uid)
+        return render_template('ls.html',ls=ls,word=word,uuid=uuid)
     except:
         return render_template('404.html'),404
 
