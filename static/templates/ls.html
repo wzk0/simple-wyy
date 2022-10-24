@@ -1095,7 +1095,7 @@ const ap = new APlayer({
 {% endfor %}
 <br><br>
 <h3>🌈本页音乐wget指令</h3><br><br>
-<div class="highlight"><pre>mkdir "{{ word.split(' - ')[0] }}"<br>touch temp.sh<br>{% for l in ls %}echo "wget '{{ l['url'] }}' -O '{{ word.split(' - ')[0] }}/{{ l['name'] }} - {{ l['artist'] }}.mp3'" >> temp.sh<br>{% endfor %}bash temp.sh<br>rm -rf temp.sh</pre></div>
+<div class="highlight"><pre>mkdir "{{ word.split(' - ')[0] }}"<br>touch temp.sh<br>{% for l in ls %}echo "wget '{{ l['url'] }}' -O '{{ word.split(' - ')[0] }}/{{ l['name'] }} - {{ l['artist'] }}.mp3'" >> temp.sh<br>{% endfor %}sh temp.sh<br>rm -rf temp.sh</pre></div>
 
 <br><br><br><br>
 <footer><center><a href="/">🚀回到主页.</a></center></footer>
