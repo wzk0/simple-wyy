@@ -245,10 +245,23 @@ def dl(uid):
             arar.append({'name':n,'id':i})
         pic=movies['songs'][0]['al']['picUrl']
         namels=[name,','.join(ar),pic]
-        return render_template('play.html',url=url,lrc=lrc,namels=namels,al_ls=al_ls,arar=arar) 
+        return render_template('play.html',url=url,lrc=lrc,namels=namels,al_ls=al_ls,arar=arar,mv=movies['songs'][0]['mv']) 
     except:
         return render_template('404.html'),404
-    return render_template('play.html',url=url,lrc=lrc,namels=namels,al_ls=al_ls,arar=arar) 
+    return render_template('play.html',url=url,lrc=lrc,namels=namels,al_ls=al_ls,arar=arar,mv=movies['songs'][0]['mv']) 
+
+@app.route('/mv/<int:uid>')
+def mvmv(uid):
+    global session
+    global api
+    global cookies
+    try:
+        ls=['/mv/detail?mvid=','/mv/url?id=']
+        ls0=json.loads(session.get(api+ls[0]+str(uid),cookies=cookies).text)
+        ls1=json.loads(session.get(api+ls[1]+str(uid),cookies=cookies).text)
+        return render_template('mv.html',name=ls0['data']['name']+' - '+ls0['data']['artistName'],play=ls0['data']['playCount'],Time=ls0['data']['publishTime'],url=ls1['data']['url'],cover=ls0['data']['cover'])
+    except:
+        return render_template('404.html'),404
 
 @app.route('/list',methods=['GET','POST'])
 def list():
