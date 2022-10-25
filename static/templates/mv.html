@@ -1071,15 +1071,15 @@ body .markdown-body
 </style><title>🍱MV</title></head><body><article class="markdown-body"><h2 id="_1">🍱便当的简陋网易云!<a class="headerlink" href="file:///tmp/15.html#_1" title="Permanent link"></a></h2>
 <br>
 <ul>
-<li>
-<p>名称: <strong>{{ name }}</strong></p>
+<li>{% autoescape false %}
+<p>✨名称: <strong>{{ name }}</strong></p>
 <br></li>
 <li>
-<p>播放次数: <strong>{{ play }}</strong></p>
+<p>🔥播放次数: <strong>{{ play }}</strong></p>
 <br></li>
 <li>
-<p>上传日期: <strong>{{ Time }}</strong></p>
-<br></li>
+<p>🎉上传日期: <strong>{{ Time }}</strong></p>
+<br></li>{% endautoescape %}
 <hr><br><br>
 <video src="{{ url }}" width="100%" controls="controls" poster="{{ cover }}">
 看起来你的浏览器不支持播放视频...

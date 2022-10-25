@@ -2,6 +2,7 @@ from flask import Flask,render_template,request,redirect,url_for
 import requests
 import json
 import random
+import time as ttt
 
 session=requests.Session()
 
@@ -111,6 +112,12 @@ def analyze_1002(data):
         ar.append({'title':a['nickname'],'year':str(a['userId']),'link':'/me/%s'%str(a['userId']),'word':'查看Ta的歌单⚡️'})
     return ar
 
+def analyze_1014(data):
+    ar=[]
+    for a in data['result']['videos']:
+        ar.append({'title':a['title'],'year':str(a['vid']),'link':'/mv/%s'%str(a['vid']),'word':'跳转至视频播放界面⚡️'})
+    return ar
+
 def me(data):
     ar=[]
     for a in data:
@@ -190,19 +197,22 @@ def res(movies):
             return render_template('404.html'),404
         else:
             r=session.get(movies,cookies=cookies)
-        if '&type=1002' in str(r.url):
-            movies=analyze_1002(json.loads(r.text))
+        if '&type=1014' in str(r.url):
+            movies=analyze_1014(json.loads(r.text))
         else:
-            if '&type=1000' in str(r.url):
-                movies=analyze_1000(json.loads(r.text))
+            if '&type=1002' in str(r.url):
+                movies=analyze_1002(json.loads(r.text))
             else:
-                if '&type=100' in str(r.url):
-                    movies=analyze_100(json.loads(r.text))
+                if '&type=1000' in str(r.url):
+                    movies=analyze_1000(json.loads(r.text))
                 else:
-                    if '&type=10' in str(r.url):
-                        movies=analyze_10(json.loads(r.text))
+                    if '&type=100' in str(r.url):
+                        movies=analyze_100(json.loads(r.text))
                     else:
-                        movies=analyze(json.loads(r.text))
+                        if '&type=10' in str(r.url):
+                            movies=analyze_10(json.loads(r.text))
+                        else:
+                            movies=analyze(json.loads(r.text))
         return render_template('result.html',movies=movies)
     except:
         return render_template('404.html'),404
@@ -250,18 +260,26 @@ def dl(uid):
         return render_template('404.html'),404
     return render_template('play.html',url=url,lrc=lrc,namels=namels,al_ls=al_ls,arar=arar,mv=movies['songs'][0]['mv']) 
 
-@app.route('/mv/<int:uid>')
+@app.route('/mv/<string:uid>')
 def mvmv(uid):
     global session
     global api
     global cookies
     try:
-        ls=['/mv/detail?mvid=','/mv/url?id=']
-        ls0=json.loads(session.get(api+ls[0]+str(uid),cookies=cookies).text)
-        ls1=json.loads(session.get(api+ls[1]+str(uid),cookies=cookies).text)
-        return render_template('mv.html',name=ls0['data']['name']+' - '+ls0['data']['artistName'],play=ls0['data']['playCount'],Time=ls0['data']['publishTime'],url=ls1['data']['url'],cover=ls0['data']['cover'])
+        if uid.isdigit():
+            ls=['/mv/detail?mvid=','/mv/url?id=']
+            ls0=json.loads(session.get(api+ls[0]+str(uid),cookies=cookies).text)
+            ls1=json.loads(session.get(api+ls[1]+str(uid),cookies=cookies).text)
+            return render_template('mv.html',name=ls0['data']['name']+' - '+ls0['data']['artistName'],play=ls0['data']['playCount'],Time=ls0['data']['publishTime'],url=ls1['data']['url'],cover=ls0['data']['cover'])
+        else:
+            ls=['/video/detail?id=','/video/url?id=']
+            ls0=json.loads(session.get(api+ls[0]+str(uid),cookies=cookies).text)
+            ls1=json.loads(session.get(api+ls[1]+str(uid),cookies=cookies).text)
+            time_now=ttt.strftime("%Y-%m-%d",ttt.localtime(ls0['data']['publishTime']))
+            return render_template('mv.html',name=ls0['data']['title']+'<br><br><br><blockquote>'+ls0['data']['description']+'</blockquote>',play=ls0['data']['playTime'],Time=time_now+'(可能会显示错误)',url=ls1['urls'][0]['url'],cover=ls0['data']['coverUrl'])
     except:
         return render_template('404.html'),404
+        
 
 @app.route('/list',methods=['GET','POST'])
 def list():
