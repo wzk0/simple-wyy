@@ -275,8 +275,12 @@ def mvmv(uid):
             ls=['/video/detail?id=','/video/url?id=']
             ls0=json.loads(session.get(api+ls[0]+str(uid),cookies=cookies).text)
             ls1=json.loads(session.get(api+ls[1]+str(uid),cookies=cookies).text)
+            if ls0['data']['description']==None:
+                description='😶‍🌫️这个视频没有描述...'
+            else:
+                description=ls0['data']['description']
             time_now=ttt.strftime("%Y-%m-%d",ttt.localtime(ls0['data']['publishTime']))
-            return render_template('mv.html',name=ls0['data']['title']+'<br><br><br><blockquote>'+ls0['data']['description']+'</blockquote>',play=ls0['data']['playTime'],Time=time_now+'(可能会显示错误)',url=ls1['urls'][0]['url'],cover=ls0['data']['coverUrl'])
+            return render_template('mv.html',name=ls0['data']['title']+'<br><br><br><blockquote>'+description+'</blockquote>',play=ls0['data']['playTime'],Time=time_now+'(可能会显示错误)',url=ls1['urls'][0]['url'],cover=ls0['data']['coverUrl'])
     except:
         return render_template('404.html'),404
         
