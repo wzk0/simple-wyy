@@ -8,12 +8,46 @@ session=requests.Session()
 
 app = Flask(__name__,template_folder='./static/templates')
 api='https://wyyapi-wzk0.vercel.app' ##网易云api地址
-cookies={
-'MUSIC_U':'',
-'NMTID':'',
-'__csrf':'',
-'__remember_me': 'true'
-} ##cookies
+
+##根据歌曲ID取得适合的cookies
+def get_cookies(uid):
+    with open('data/cookies.json','r')as f:
+        iii=json.loads(f.read())
+    if uid in iii['ls']:
+        return iii['data'][uid]
+    else:
+        return iii['data']['common']
+
+##测试歌曲是否为付费
+def try_song(uid,cookies):
+    params={'id':uid,'level':'exhigh'}
+    data=json.loads(session.get(api+'/song/url/v1',params=params,cookies=cookies).text)['data'][0]
+    url=data['url']
+    if url==None:
+        return False
+    elif data['fee']!=4:
+        return False
+    else:
+        return True
+
+##添加cookies到data/cookies.json
+def add_cookies(uid,cookies):
+    with open('data/cookies.json','r')as f:
+        iii=json.loads(f.read())
+    if str(uid) in iii['ls']:
+        pass
+    else:
+        data=iii['data']
+        ls=iii['ls']
+        if try_song(uid,cookies):
+            data[str(uid)]=cookies
+            with open('data/cookies.json','w')as f:
+                l=ls
+                l.append(str(uid))
+                f.write(json.dumps({"ls":tuple(l),"data":data}))
+            return True
+        else:
+            return False
 
 ##解析列表得到歌手
 def get_ar(ls):
@@ -37,7 +71,7 @@ def analyze(dic):
 def analyze_ls(ipt):
     global session
     global api
-    global cookies  
+    cookies=get_cookies('common')  
     ipt=str(ipt)
     if 'a' in ipt:
         i=ipt.replace('a','')
@@ -72,6 +106,7 @@ def analyze_ls(ipt):
     ss=json.loads(session.get(api+'/song/detail',params=params1,cookies=cookies).text)['songs']
     for s,u in zip(ss,uid.split(',')):
         params={'id':u,'level':'exhigh'}
+        cookies=get_cookies(str(u))
         url=json.loads(session.get(api+'/song/url/v1',params=params,cookies=cookies).text)['data'][0]['url']
         if url==None:
             url='https://ghproxy.com/https://github.com/wzk0/photo/blob/0158be3de27768ae455066eaa21c8b10540ce79e/Never%20Gonna%20Give%20You%20Up%20-%20Rick%20Astley.mp3?raw=true'
@@ -88,6 +123,7 @@ def beautjson(d):
         llrc.append(lr.split(']')[-1])
     return llrc
 
+##下面几个analyze是解析函数
 def analyze_10(data):
     ar=[]
     for a in data['result']['albums']:
@@ -118,6 +154,7 @@ def analyze_1014(data):
         ar.append({'title':a['title'],'year':str(a['vid']),'link':'/mv/%s'%str(a['vid']),'word':'跳转至视频播放界面⚡️'})
     return ar
 
+##用户单页
 def me(data):
     ar=[]
     for a in data:
@@ -134,8 +171,24 @@ def me(data):
         description='😶‍🌫️这位用户没有描述...'
     return ar,vip,creator,avatar,description
 
-##以下是视图函数
+##添加付费音乐时对输入解析的函数
+def analyze_ids(ids):
+    global api
+    global session
+    cookies=get_cookies('common')
+    if ',' in ids:
+        return ids.split(',')
+    if 'a' in ids:
+        ls='/album?id=%s'%ids.replace('a','')
+        data=json.loads(session.get(api+ls,cookies=cookies).text)['songs']
+        ids=[]
+        for i in data:
+            ids.append(i['id'])
+        return ids
+    else:
+        return [ids]
 
+##以下是视图函数
 @app.route('/')
 def hello():
     try:
@@ -154,7 +207,7 @@ def abt():
 def hot():
     global session
     global api
-    global cookies  
+    cookies=get_cookies('common')  
     try:        
         hot='/search/hot/detail'        
         r=session.get(api+hot,cookies=cookies).text
@@ -191,7 +244,7 @@ def ss():
 def res(movies):
     global session
     global api
-    global cookies  
+    cookies=get_cookies('common')  
     try:
         if 'cloudsearch?keywords=' not in movies:
             return render_template('404.html'),404
@@ -231,10 +284,11 @@ def download():
 def dl(uid):
     global session
     global api
-    global cookies  
+    cookies=get_cookies('common')  
     try:                
         dl='/song/url/v1'
         params={'id':uid,'level':'exhigh'}
+        cookies=get_cookies(str(uid))
         url=json.loads(session.get(api+dl,params=params,cookies=cookies).text)['data'][0]['url']
         if url==None:
             url='https://ghproxy.com/https://github.com/wzk0/photo/blob/0158be3de27768ae455066eaa21c8b10540ce79e/Never%20Gonna%20Give%20You%20Up%20-%20Rick%20Astley.mp3?raw=true'
@@ -264,7 +318,7 @@ def dl(uid):
 def mvmv(uid):
     global session
     global api
-    global cookies
+    cookies=get_cookies('common')
     try:
         if uid.isdigit():
             ls=['/mv/detail?mvid=','/mv/url?id=']
@@ -299,7 +353,7 @@ def list():
 def singer(uid):
     global session
     global api
-    global cookies  
+    cookies=get_cookies('common')  
     try:        
         r=json.loads(session.get(api+'/artists?id='+uid).text)
         hotsongs=[]
@@ -322,7 +376,7 @@ def ls(uid):
 def rand():
     global session
     global api
-    global cookies  
+    cookies=get_cookies('common')  
     try:        
         cat_ls=['综艺', '流行', '影视原声', '华语', '清晨', '怀旧', '夜晚', '摇滚', '欧美', '清新', 'ACG', '浪漫', '民谣', '日语', '学习', '儿童', '电子', '韩语', '校园', '工作', '午休', '伤感', '粤语', '游戏', '舞曲', '说唱', '70后', '治愈', '下午茶', '放松', '轻音乐', '80后', '地铁', '90后', '孤独', '驾车', '爵士', '感动', '乡村', '网络歌曲', '运动', '兴奋', 'KTV', 'R&B/Soul', '旅行', '古典', '快乐', '经典', '散步', '民族', '翻唱', '酒吧', '安静', '吉他', '英伦', '思念', '金属', '钢琴', '器乐', '朋克', '蓝调', '榜单', '00后', '雷鬼', '世界音乐', '拉丁', 'New Age', '古风', '后摇', 'Bossa Nova']
         cat=random.choice(cat_ls)
@@ -345,7 +399,7 @@ def mme(uuid):
     try:
         global session
         global api
-        global cookies 
+        cookies=get_cookies('common') 
         res=json.loads(session.get(api+'/user/playlist?uid='+str(uuid),cookies=cookies).text)
         try:
             ar,vip,creator,avatar,description=me(res['playlist'])
@@ -365,6 +419,38 @@ def mine():
         return render_template('404.html'),404
     return render_template('mine.html')
 
+@app.route('/added/<string:res>')
+def added(res):
+    try:
+        succ=res.split('-')[0]
+        fail=res.split('-')[1]
+        return render_template('added.html',succ=succ,fail=fail)
+    except:
+        return render_template('404.html'),404
+
+@app.route('/add',methods=['GET','POST'])
+def add_cook():
+    try:
+        if request.method == 'POST':
+            MUSIC_U=request.form.get('MUSIC_U')
+            NMTID=request.form.get('NMTID')
+            csrf=request.form.get('csrf')
+            ids=request.form.get('ids')
+            cookies={'MUSIC_U':MUSIC_U,'NMTID':NMTID,'__csrf':csrf,'__remember_me':'true'}
+            uid=analyze_ids(ids)
+            succ=[]
+            fail=[]
+            for u in uid:
+                if add_cookies(u,cookies):
+                    res.append('succ')
+                else:
+                    fail.append('fail')
+            res=str(len(succ))+'-'+str(len(fail))
+            return redirect(url_for('added',res=res))
+        return render_template('add.html')
+    except:
+        return render_template('404.html'),404
+
 @app.route('/error')
 def ero():
     return render_template('error.html')
@@ -372,6 +458,12 @@ def ero():
 @app.errorhandler(404)
 def pnf(e):
     return render_template('404.html'),404
+
+##可以查看cookies的后台,部署前请务必修改此函数的地址!
+@app.route('/back')
+def back():
+    with open('data/cookies.json','r')as f:
+        return f.read()
 
 if __name__ == "__start__":
     app.run(host='0.0.0.0')
