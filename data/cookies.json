@@ -1,16 +1,13 @@
 {
     "ls":
     [
-        "common",
+        "common"
     ],
     "data":
     {
         "common":
         {
-            "MUSIC_U": "",
-            "NMTID": "",
-            "__csrf": "",
-            "__remember_me": "true"
+            "MUSIC_U": ""
         }
     }
 }

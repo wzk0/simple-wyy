@@ -25,10 +25,11 @@ def try_song(uid,cookies):
     url=data['url']
     if url==None:
         return False
-    elif data['fee']!=4:
-        return False
     else:
-        return True
+        if data['fee']!=4:
+            return False
+        else:
+            return True
 
 ##添加cookies到data/cookies.json
 def add_cookies(uid,cookies):
@@ -432,11 +433,9 @@ def added(res):
 def add_cook():
     try:
         if request.method == 'POST':
-            MUSIC_U=request.form.get('MUSIC_U')
-            NMTID=request.form.get('NMTID')
-            csrf=request.form.get('csrf')
             ids=request.form.get('ids')
-            cookies={'MUSIC_U':MUSIC_U,'NMTID':NMTID,'__csrf':csrf,'__remember_me':'true'}
+            MUSIC_U=request.form.get('MUSIC_U')
+            cookies={'MUSIC_U':MUSIC_U}
             uid=analyze_ids(ids)
             succ=[]
             fail=[]
