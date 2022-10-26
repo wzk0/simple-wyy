@@ -442,7 +442,7 @@ def add_cook():
             fail=[]
             for u in uid:
                 if add_cookies(u,cookies):
-                    res.append('succ')
+                    succ.append('succ')
                 else:
                     fail.append('fail')
             res=str(len(succ))+'-'+str(len(fail))
