@@ -1,1 +1,16 @@
-{"ls": ["common", "1900999296"], "data": {"common": {"MUSIC_U": "", "NMTID": "", "__csrf": "", "__remember_me": "true"}, "1900999296": {"MUSIC_U": "71ba7e05c18966965f6e735cb060048851ef5f8578438a3396612f8d8c285447519e07624a9f00531c038bccecda50f5bb44f82ad96c4ae4a97c4c95212c9f7b6437b6f1c365842fd4dbf082a8813684", "NMTID": "00OfFG2foTBulZ2-UovgGgAwaZ9BOoAAAGDKyXSQg", "__csrf": "__csrf=f13a8628e0fdb00ddcf15fade120fb73", "__remember_me": "true"}}}
+{
+    "ls":
+    [
+        "common",
+    ],
+    "data":
+    {
+        "common":
+        {
+            "MUSIC_U": "",
+            "NMTID": "",
+            "__csrf": "",
+            "__remember_me": "true"
+        }
+    }
+}
